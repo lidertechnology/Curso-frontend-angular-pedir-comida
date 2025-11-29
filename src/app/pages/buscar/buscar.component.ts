@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, WritableSignal, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Busqueda } from 'src/app/interfaces/busqueda';
+import { Busqueda } from 'src/app/core/interfaces/busqueda';
 import { HeaderService } from 'src/app/core/services/header.service';
 import { ProductosService } from 'src/app/core/services/productos.service';
-import { TarjetaArticuloComponent } from "../../components/tarjeta-articulo/tarjeta-producto.component";
-import { Producto } from 'src/app/interfaces/productos';
+import { TarjetaArticuloComponent } from "../../core/components/tarjeta-articulo/tarjeta-producto.component";
+import { Producto } from 'src/app/core/interfaces/productos';
 import { RouterModule } from '@angular/router';
 
 @Component({

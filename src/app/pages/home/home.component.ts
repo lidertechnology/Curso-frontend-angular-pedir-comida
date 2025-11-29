@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, WritableSignal, inject, signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { TarjetaCategoriaComponent } from 'src/app/components/tarjeta-categoria/tarjeta-categoria.component';
-import { Categoria } from 'src/app/interfaces/categorias';
+import { TarjetaCategoriaComponent } from 'src/app/core/components/tarjeta-categoria/tarjeta-categoria.component';
+import { Categoria } from 'src/app/core/interfaces/categorias';
 import { CategoriasService } from 'src/app/core/services/categorias.service';
 import { HeaderService } from 'src/app/core/services/header.service';
 

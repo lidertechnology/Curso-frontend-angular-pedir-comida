@@ -1,5 +1,5 @@
 import { Component, effect, inject, signal } from '@angular/core';
-import { HeaderService } from '../../core/services/header.service';
+import { HeaderService } from '../../services/header.service';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 

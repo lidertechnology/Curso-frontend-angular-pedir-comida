@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
-import { ArticuloComponent } from './views/articulo/articulo.component';
-import { BuscarComponent } from './views/buscar/buscar.component';
-import { CarritoComponent } from './views/carrito/carrito.component';
-import { HomeComponent } from './views/home/home.component';
-import { PerfilComponent } from './views/perfil/perfil.component';
-import { RubroComponent } from './views/rubro/rubro.component';
+import { ArticuloComponent } from './pages/articulo/articulo.component';
+import { BuscarComponent } from './pages/buscar/buscar.component';
+import { CarritoComponent } from './pages/carrito/carrito.component';
+import { HomeComponent } from './pages/home/home.component';
+import { PerfilComponent } from './pages/perfil/perfil.component';
+import { RubroComponent } from './pages/rubro/rubro.component';
 
 export const routes: Routes = [
   {

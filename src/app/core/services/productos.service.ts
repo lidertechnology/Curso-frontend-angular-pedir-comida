@@ -1,8 +1,8 @@
 
 import { Injectable } from '@angular/core';
-import { Producto } from '../../interfaces/productos';
-import { Categoria } from '../../interfaces/categorias';
-import { Busqueda } from '../../interfaces/busqueda';
+import { Producto } from '../interfaces/productos';
+import { Categoria } from '../interfaces/categorias';
+import { Busqueda } from '../interfaces/busqueda';
 
 @Injectable({
   providedIn: 'root'

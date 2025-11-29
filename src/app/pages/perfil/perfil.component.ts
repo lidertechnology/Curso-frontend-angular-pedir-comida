@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Perfil } from 'src/app/interfaces/perfil';
+import { Perfil } from 'src/app/core/interfaces/perfil';
 import { HeaderService } from 'src/app/core/services/header.service';
 import { PerfilService } from 'src/app/core/services/perfil.service';
 
