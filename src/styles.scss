@@ -1,6 +1,21 @@
-@use "./assets/styles/variables.scss";
-
 /* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+:root {
+  --color-principal:       #df610d;
+  --color-principal-claro: #f5af5f;
+  --color-sello-comida:    rgb(182, 255, 180);
+  
+  --border-radius-chico:   5px;
+  --border-radius-mediano: 15px;
+  --border-radius-grande:  25px;
+
+  --color-texto:         black;
+  --color-texto-claro:   rgb(84, 84, 84);
+}
+
+
 /* http://meyerweb.com/eric/tools/css/reset/
    v2.0 | 20110126
    License: none (public domain)
@@ -36,8 +51,7 @@ body {
   width: 100vw;
   height: 100dvh;
   overflow-x: hidden;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: variables.$color-texto;
+  color: var(--color-texto);
 }
 ol, ul {
 	list-style: none;
@@ -80,4 +94,40 @@ h1,h2,h3,h4,h5,h6{
 .flex-apart{
   display: flex;
   justify-content: space-between;
+}
+
+/* ESTILOS DEL TABS */
+.footer-tabs {
+  display: flex;
+  justify-content: space-around;
+  background-color: #e5e5e5;
+  border-top-left-radius:     50px;
+  border-top-right-radius:    50px;
+  border-bottom-left-radius:  50px;
+  border-bottom-right-radius: 50px;
+  overflow: hidden;
+  height: 50px;
+  margin: 20px;
+
+  .tab {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 200ms ease-in-out;
+
+    svg {
+      display: block;
+      margin: auto;
+      transition: 200ms ease-in-out;
+    }
+  }
+
+  .seleccionado {
+    background-color: var(--color-principal);
+    &.seleccionado {
+      background-color: var(--color-principal);
+      svg {fill: white; }
+    }
+  }
 }

@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, ViewChild, WritableSignal, inject, signal } from '@angular/core';
 import { CartService } from 'src/app/core/services/cart.service';
 import { HeaderService } from 'src/app/core/services/header.service';
-import { ContadorCantidadComponent } from "../../core/components/contador-cantidad/contador-cantidad.component";
+import { ContadorCantidadComponent } from "../../components/contador-cantidad/contador-cantidad.component";
 import { Producto } from 'src/app/core/interfaces/productos';
 import { ProductosService } from 'src/app/core/services/productos.service';
 import { Router, RouterModule } from '@angular/router';

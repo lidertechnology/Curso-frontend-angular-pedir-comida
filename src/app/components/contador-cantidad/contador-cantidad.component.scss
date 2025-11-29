@@ -1,5 +1,3 @@
-@use "./../../../../assets/styles/variables.scss";
-
 $altura : 30px;
 
 #container{
@@ -7,8 +5,8 @@ $altura : 30px;
   justify-content: space-between;
   width: 80px;
   height: $altura;
-  background-color: variables.$color-principal-claro;
-  border-radius: variables.$border-radius-chico;
+  background-color: var(--color-principal-claro);
+  border-radius: var(--border-radius-chico);
   overflow: hidden;
   border: 1px solid black;
 }
@@ -16,7 +14,7 @@ $altura : 30px;
 button{
   border: unset;
   font-weight: bold;
-  background-color: variables.$color-principal;
+  background-color: var(--color-principal);
   padding: 0 10px;
 }
 

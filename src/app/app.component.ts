@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { HeaderComponent } from './core/components/header/header.component';
-import { TabsComponent } from './core/components/tabs/tabs.component';
+import { HeaderComponent } from './components/header/header.component';
+import { TabsComponent } from './components/tabs/tabs.component';
 
 @Component({
   selector: 'app-root',

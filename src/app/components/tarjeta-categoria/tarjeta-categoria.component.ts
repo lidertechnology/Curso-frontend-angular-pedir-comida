@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Categoria } from '../../interfaces/categorias';
+import { Categoria } from '../../core/interfaces/categorias';
 import { CommonModule } from '@angular/common';
 
 @Component({

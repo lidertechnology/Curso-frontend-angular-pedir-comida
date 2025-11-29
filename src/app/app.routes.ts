@@ -8,27 +8,21 @@ import { RubroComponent } from './pages/rubro/rubro.component';
 
 export const routes: Routes = [
   {
-    path: "",
-    component: HomeComponent
+    path: "",component: HomeComponent
   },
   {
-    path: "carrito",
-    component: CarritoComponent
+    path: "carrito",component: CarritoComponent
   },
   {
-    path: "categoria/:id",
-    component: RubroComponent
+    path: "rubro/:id",component: RubroComponent
   },
   {
-    path: "articulo/:id",
-    component: ArticuloComponent
+    path: "articulo/:id",component: ArticuloComponent
   },
   {
-    path: "perfil",
-    component: PerfilComponent
+    path: "perfil",component: PerfilComponent
   },
   {
-    path: "buscar",
-    component: BuscarComponent
+    path: "buscar",component: BuscarComponent
   }
 ];

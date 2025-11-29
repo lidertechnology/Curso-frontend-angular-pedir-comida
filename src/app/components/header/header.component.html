@@ -1,0 +1,5 @@
+<header [ngClass]="{extendido: headerService.extendido()}" class="fondo-imagen">
+  <img src="assets/img/logo.png" alt="logo del restaurante">
+  
+  <h1 class="{{claseAplicada()}}" (animationend)="mostrarTituloNuevo($event)">{{tituloMostrado()}}</h1>
+</header>

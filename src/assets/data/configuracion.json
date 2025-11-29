@@ -1,4 +1,5 @@
 {
   "costoEnvio": 200,
-  "diasVencimientoCarrito": 4
+  "diasVencimientoCarrito": 4,
+  "nombreRestaurante": "Mi Restaurante"
 }
