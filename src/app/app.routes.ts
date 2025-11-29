@@ -31,4 +31,4 @@ export const routes: Routes = [
     path: "buscar",
     component: BuscarComponent
   }
-];;
+];
