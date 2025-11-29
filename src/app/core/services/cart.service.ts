@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Cart } from '../interfaces/carrito';
+import { Cart } from '../../interfaces/carrito';
 import { ConfigService } from './config.service';
 
 @Injectable({

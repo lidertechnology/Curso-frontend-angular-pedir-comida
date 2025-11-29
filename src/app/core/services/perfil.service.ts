@@ -1,5 +1,5 @@
 import { Injectable, WritableSignal, signal } from '@angular/core';
-import { Perfil } from '../interfaces/perfil';
+import { Perfil } from '../../interfaces/perfil';
 
 @Injectable({
   providedIn: 'root'

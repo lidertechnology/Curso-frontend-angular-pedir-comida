@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, WritableSignal, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { TarjetaArticuloComponent } from 'src/app/core/components/tarjeta-articulo/tarjeta-producto.component';
-import { Producto } from 'src/app/core/interfaces/productos';
+import { TarjetaArticuloComponent } from 'src/app/components/tarjeta-articulo/tarjeta-producto.component';
+import { Producto } from 'src/app/interfaces/productos';
 import { CategoriasService } from 'src/app/core/services/categorias.service';
 import { HeaderService } from 'src/app/core/services/header.service';
 
