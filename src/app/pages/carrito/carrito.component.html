@@ -1,36 +1,27 @@
-@if (cartService.carrito.length !== 0) {
+@if (productosCarrito().length !== 0) {
 
     <section>
   <div id="tarjetas-container" class="margen-chico">
-    @for (producto of cartService.carrito; track producto; let i = $index) {
+    @for (item of productosCarrito(); track item) {
   <div class="tarjeta-producto-container">
-      @if (productosCarrito()[i]) {
 
-        <div id="izq" [ngStyle]="{'background-image': 'url('+productosCarrito()[i].fotoUrl+')'}">
+        <div id="izq" [ngStyle]="{'background-image': 'url('+item.producto.fotoUrl+')'}">
           <div>
-            @if (productosCarrito()[i].esVegano) {
-<img src="./../../../assets/icons/vegano.svg" alt="Apto vegano">
-}
-            @if (productosCarrito()[i].esCeliaco) {
-<img src="./../../../assets/icons/celiaco.png" alt="Apto celiaco">
-}
+            @if (item.producto.esVegano) {<img src="./../../../assets/icons/vegano.svg" alt="Apto vegano">}
+            @if (item.producto.esCeliaco) {<img src="./../../../assets/icons/celiaco.png" alt="Apto celiaco">}
           </div>
         </div>
         <div id="centro">
-          <p class="negrita">{{productosCarrito()[i].nombre}} </p>
-          @if (producto.notas !== '') {
-<p>{{producto.notas}}</p>
-}
-          <app-contador-cantidad [cantidadInicial]="producto.cantidad" (cantidadCambiada)="cambiarCantidadProducto(producto.idProducto,$event)"></app-contador-cantidad>
+          <p class="negrita">{{item.producto.nombre}} </p>
+          <app-contador-cantidad [cantidadInicial]="item.cantidad" (cantidadCambiada)="cambiarCantidadProducto({idProducto: item.producto.id, cantidad: $event})"></app-contador-cantidad>
         </div>
         <div id="der">
-          <button id="borrar" (click)="eliminarProducto(producto.idProducto)">
+          <button id="borrar" (click)="eliminarProducto(item.producto.id)">
             <img src="./../../../assets/icons/borrar.png" alt="">
           </button>
-          <p class="negrita">${{productosCarrito()[i].precio}}</p>
+          <p class="negrita">${{item.producto.precio}}</p>
         </div>
 
-}
     </div>
 }
   </div>
@@ -64,9 +55,9 @@
       <p class="negrita">Total</p>
     </div>
     <div id="montos">
-      <p class="negrita">${{subtotal}}</p>
+      <p class="negrita">${{subtotal()}}</p>
       <p>${{this.configService.configuracion().costoEnvio}}</p>
-      <p class="negrita">${{total}}</p>
+      <p class="negrita">${{total()}}</p>
     </div>
   </div>
   <button id="enviar" [disabled]="!perfilService.perfil()" (click)="enviarMensaje()">Realizar pedido</button>

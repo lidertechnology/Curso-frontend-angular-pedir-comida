@@ -1,19 +1,16 @@
 import { Component } from '@angular/core';
-import { NavigationEnd, Router, RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-tabs',
   templateUrl: './tabs.component.html',
-  styleUrls: ['./tabs.component.scss'],
   standalone: true,
-  imports: [RouterModule]
+  imports: [RouterModule, MatIconModule]
 })
 export class TabsComponent {
 
   constructor(public router: Router){
   }
-
-  colorDesactivado = "#555555";
-  colorActivado = "#000000";
 
 }

@@ -1,23 +1,33 @@
-import { Component, EventEmitter, Input, OnInit, Output, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
 
 @Component({
   selector: 'app-contador-cantidad',
   templateUrl: './contador-cantidad.component.html',
   styleUrls: ['./contador-cantidad.component.scss'],
-  standalone: true
+  standalone: true,
+  imports: [CommonModule]
 })
-export class ContadorCantidadComponent implements OnInit {
+export class ContadorCantidadComponent {
+
+  @Input() cantidadInicial: number = 1;
+  @Output() cantidadCambiada = new EventEmitter<number>();
+  cantidad = signal(1);
+
   ngOnInit(): void {
-    this.numero.set(this.cantidadInicial)
+    this.cantidad.set(this.cantidadInicial);
   }
 
-  numero = signal(1);
-  @Output() cantidadCambiada = new EventEmitter<number>();
-  @Input() cantidadInicial = 1;
+  sumar(){
+    this.cantidad.update(value => value + 1);
+    this.cantidadCambiada.emit(this.cantidad());
+  }
 
-  actualizarNumero(diferencia:number){
-    this.numero.set(Math.max(this.numero()+diferencia,1));
-    this.cantidadCambiada.emit(this.numero());
+  restar(){
+    if(this.cantidad() > 1){
+      this.cantidad.update(value => value - 1);
+      this.cantidadCambiada.emit(this.cantidad());
+    }
   }
 
 }

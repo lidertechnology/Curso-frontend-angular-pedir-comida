@@ -1,5 +1,3 @@
-@use "../../../assets/styles/variables.scss";
-
 *{
   font-size: large;
 }
@@ -18,7 +16,7 @@ form{
 }
 
 label{
-  color: variables.$color-texto-claro;
+  color: var(--color-texto-claro);
 }
 
 input{
@@ -35,9 +33,9 @@ input{
 button{
   height: 40px;
   font-weight: bold;
-  background-color: variables.$color-principal-claro;
+  background-color: var(--color-principal-claro);
   border: none;
-  border-radius: variables.$border-radius-chico;
+  border-radius: var(--border-radius-chico);
   cursor: pointer;
   &:disabled{
     background-color: rgb(217, 217, 217);

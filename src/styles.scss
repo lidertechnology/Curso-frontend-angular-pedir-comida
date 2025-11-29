@@ -1,7 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap');
+
 /* You can add global styles to this file, and also import other style files */
 
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body { margin: 0; font-family: var(--font-family-principal); }
+
 :root {
   --color-principal:       #df610d;
   --color-principal-claro: #f5af5f;
@@ -11,8 +14,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   --border-radius-mediano: 15px;
   --border-radius-grande:  25px;
 
-  --color-texto:         black;
-  --color-texto-claro:   rgb(84, 84, 84);
+  --font-family-principal: 'Nunito', sans-serif;
+  --color-texto:           black;
+  --color-texto-claro:     rgb(84, 84, 84);
+  --color-texto-header:    white;
 }
 
 
@@ -97,7 +102,7 @@ h1,h2,h3,h4,h5,h6{
 }
 
 /* ESTILOS DEL TABS */
-.footer-tabs {
+app-tabs .footer-tabs {
   display: flex;
   justify-content: space-around;
   background-color: #e5e5e5;
@@ -116,18 +121,105 @@ h1,h2,h3,h4,h5,h6{
     align-items: center;
     transition: 200ms ease-in-out;
 
-    svg {
-      display: block;
-      margin: auto;
+    mat-icon {
+      color: #555555; /* Color para íconos inactivos */
       transition: 200ms ease-in-out;
     }
   }
 
   .seleccionado {
     background-color: var(--color-principal);
-    &.seleccionado {
-      background-color: var(--color-principal);
-      svg {fill: white; }
+    mat-icon {
+      color: white; /* Color para el ícono activo */
     }
   }
 }
+
+/* ESTILOS DEL HEADER */
+app-header {
+  header {
+    position: relative;
+    height: 80px;
+    background-color: var(--color-principal);
+    border-radius: 0 0 var(--border-radius-mediano) var(--border-radius-mediano);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 500ms ease-in-out;
+    padding: 0 20px;
+  }
+
+  img {
+    display: none;
+  }
+
+  .acciones {
+    display: flex;
+    gap: 15px;
+  }
+
+  .acciones a {
+    color: var(--color-texto-header);
+  }
+
+  header::before {
+    position: absolute;
+    content: "";
+    background-image: url("assets/img/portada.jpg");
+    background-position: center;
+    background-size: cover;
+    top: 0; left: 0; right: 0; bottom: 0;
+    opacity: 0;
+    z-index: -1;
+    transition: 500ms;
+    border-radius: 0 0 var(--border-radius-mediano) var(--border-radius-mediano);
+  }
+
+  header.extendido::before { opacity: 0.5; }
+
+  h1 {
+    font-family: var(--font-family-principal);
+    font-size: xx-large;
+    font-weight: 800;
+    margin: 0;
+    text-align: center;
+    flex-grow: 1;
+    color: var(--color-texto-header);
+  }
+
+  .extendido {
+    height: 230px;
+    background-color: unset;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 30px;
+    box-sizing: border-box;
+  }
+
+  .extendido img {
+    display: block;
+    width: 140px;
+    height: 140px;
+  }
+
+  .extendido app-btn-back,
+  .extendido .acciones {
+    display: none;
+  }
+
+  .extendido h1 {
+    width: 100%;
+    margin: 0;
+    margin-top: 15px;
+    color: var(--color-texto);
+  }
+
+  .fade-in { animation: fade-out 450ms ease-in; animation-direction: reverse; }
+  .fade-out { animation: fade-out 150ms ease-in; animation-fill-mode: forwards; }
+  @keyframes fade-out { 100% { opacity: 0%; } }
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

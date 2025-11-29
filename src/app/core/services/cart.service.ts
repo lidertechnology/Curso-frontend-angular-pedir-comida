@@ -1,13 +1,20 @@
-import { Injectable } from '@angular/core';
+import { Injectable, WritableSignal, inject, signal } from '@angular/core';
 import { Cart } from '../interfaces/carrito';
 import { ConfigService } from './config.service';
+import { NotificationService } from './notification.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
 
-  constructor(private config:ConfigService) {
+  carrito: WritableSignal<Cart[]> = signal([]);
+  config = inject(ConfigService);
+  notificationService = inject(NotificationService);
+
+  constructor() { }
+
+  initCart(){
     const cart = localStorage.getItem("cart");
     if(cart) {
       const carritoGuardado = JSON.parse(cart);
@@ -17,52 +24,65 @@ export class CartService {
         if(fecha.getTime() - fechaGuardado.getTime() > 1000*60*60*24*this.config.configuracion().diasVencimientoCarrito){
           this.vaciar();
         } else {
-          this.carrito = carritoGuardado.productos;
+          this.carrito.set(carritoGuardado.productos);
         }
       }
     }
-   }
-
-  carrito: Cart[] = []
+  }
 
   agregarProducto(idProducto:number, cantidad: number, notas:string){
-    const i = this.carrito.findIndex(producto => producto.idProducto === idProducto);
-    if(i === -1){
-      const nuevoProducto:Cart = {idProducto:idProducto, cantidad:cantidad ,notas:notas};
-      this.carrito.push(nuevoProducto);
-    } else {
-      this.carrito[i].cantidad += cantidad;
-    }
+    this.carrito.update(currentCart => {
+        const i = currentCart.findIndex(p => p.idProducto === idProducto);
+        if (i === -1) {
+            const nuevoProducto: Cart = { idProducto, cantidad, notas };
+            return [...currentCart, nuevoProducto];
+        }
+        
+        return currentCart.map((producto, index) => {
+            if (index === i) {
+                return { ...producto, cantidad: producto.cantidad + cantidad };
+            }
+            return producto;
+        });
+    });
     this.actualizarAlmacenamiento();
+    this.notificationService.mostrarNotificacion('Producto agregado al carrito');
   }
 
   eliminarProducto(idProducto:number){
-    this.carrito = this.carrito.filter(producto => producto.idProducto !== idProducto);
-    if(this.carrito.length === 0) return localStorage.removeItem("cart");
-    this.actualizarAlmacenamiento();
+    this.carrito.update(currentCart => currentCart.filter(producto => producto.idProducto !== idProducto));
+    if(this.carrito().length === 0){
+      localStorage.removeItem("cart");
+    } else {
+      this.actualizarAlmacenamiento();
+    }
+    this.notificationService.mostrarNotificacion('Producto eliminado del carrito');
   }
 
   cambiarCantidadProducto(idProducto:number, cantidad: number){
-    this.carrito = this.carrito.map(producto => {
-      const productoActual = producto;
-      if(productoActual.idProducto === idProducto) productoActual.cantidad = cantidad;
-      return productoActual;
+    this.carrito.update(currentCart => {
+      return currentCart.map(producto => {
+        if(producto.idProducto === idProducto) {
+          return {...producto, cantidad: cantidad}
+        };
+        return producto;
+      })
     })
     this.actualizarAlmacenamiento();
+    this.notificationService.mostrarNotificacion('Cantidad del producto actualizada');
   }
 
   actualizarAlmacenamiento(){
     const fecha = new Date();
     const elementoAGuardar = {
       fecha,
-      productos:this.carrito
+      productos:this.carrito()
     }
     localStorage.setItem("cart",JSON.stringify(elementoAGuardar));
   }
 
   vaciar(){
-    this.carrito = [];
+    this.carrito.set([]);
     localStorage.removeItem("cart");
   }
-
 }

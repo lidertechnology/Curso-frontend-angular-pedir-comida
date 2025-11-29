@@ -2,13 +2,13 @@ import { Component, effect, inject, signal } from '@angular/core';
 import { HeaderService } from '../../core/services/header.service';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { BtnBackComponent } from '../btn-back/btn-back.component';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss'],
   standalone: true,
-  imports: [RouterModule,CommonModule]
+  imports: [RouterModule,CommonModule, BtnBackComponent]
 })
 export class HeaderComponent {
 

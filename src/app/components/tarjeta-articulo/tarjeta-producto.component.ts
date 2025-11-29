@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { Producto } from '../../core/interfaces/productos';
+import { CartService } from 'src/app/core/services/cart.service';
 
 @Component({
   selector: 'app-tarjeta-producto',
@@ -12,4 +13,10 @@ import { Producto } from '../../core/interfaces/productos';
 export class TarjetaArticuloComponent {
 
   @Input({required:true}) producto!:Producto;
+  cartService = inject(CartService);
+
+  agregarAlCarrito(event:MouseEvent){
+    event.stopPropagation();
+    this.cartService.agregarProducto(this.producto.id, 1, "");
+  }
 }

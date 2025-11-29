@@ -1,0 +1,15 @@
+.back-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color:aliceblue;
+}
+
+.back-button svg {
+  width: 28px;
+  height: 28px;
+}

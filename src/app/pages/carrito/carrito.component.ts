@@ -1,97 +1,107 @@
-import { CommonModule } from '@angular/common';
-import { Component, ElementRef, ViewChild, WritableSignal, inject, signal } from '@angular/core';
-import { CartService } from 'src/app/core/services/cart.service';
-import { HeaderService } from 'src/app/core/services/header.service';
-import { ContadorCantidadComponent } from "../../components/contador-cantidad/contador-cantidad.component";
-import { Producto } from 'src/app/core/interfaces/productos';
-import { ProductosService } from 'src/app/core/services/productos.service';
-import { Router, RouterModule } from '@angular/router';
-import { PerfilService } from 'src/app/core/services/perfil.service';
-import { NUMERO_WHATSAPP } from 'src/app/core/constantes/telefono';
-import { ConfigService } from 'src/app/core/services/config.service';
+import { Component, OnInit, computed, inject, signal, ElementRef, ViewChild, effect } from '@angular/core';
+import { CommonModule, CurrencyPipe } from '@angular/common';
+import { RouterModule } from '@angular/router';
+
+import { CartService } from '../../core/services/cart.service';
+import { ProductosService } from '../../core/services/productos.service';
+import { PerfilService } from '../../core/services/perfil.service';
+import { ConfigService } from '../../core/services/config.service';
+import { HeaderService } from '../../core/services/header.service';
+
+import { Cart } from '../../core/interfaces/carrito';
+import { Producto } from '../../core/interfaces/productos';
+import { ContadorCantidadComponent } from '../../components/contador-cantidad/contador-cantidad.component';
 
 @Component({
-    selector: 'app-carrito',
-    templateUrl: './carrito.component.html',
-    styleUrls: ['./carrito.component.scss'],
-    standalone: true,
-    imports: [CommonModule, ContadorCantidadComponent, RouterModule]
+  selector: 'app-carrito',
+  standalone: true,
+  imports: [CommonModule, RouterModule, CurrencyPipe, ContadorCantidadComponent],
+  templateUrl: './carrito.component.html',
+  styleUrl: './carrito.component.scss'
 })
-export class CarritoComponent {
-  headerService = inject(HeaderService);
+export class CarritoComponent implements OnInit {
+
+  @ViewChild('dialog') dialog!: ElementRef<HTMLDialogElement>;
+
   cartService = inject(CartService);
   productosService = inject(ProductosService);
   perfilService = inject(PerfilService);
   configService = inject(ConfigService);
-  router = inject(Router);
+  headerService = inject(HeaderService);
 
-  productosCarrito:WritableSignal<Producto[]>= signal([]);
+  productosCarrito = signal<{ producto: Producto, cantidad: number, notas: string }[]>([]);
 
-  subtotal = 0;
-  total = 0;
-  @ViewChild("dialog") dialog!: ElementRef<HTMLDialogElement>;
+  subtotal = computed(() => {
+    return this.productosCarrito().reduce((acc, item) => acc + (item.producto.precio * item.cantidad), 0);
+  });
 
+  total = computed(() => {
+    return this.subtotal() + this.configService.configuracion().costoEnvio;
+  });
+
+  constructor() {
+    effect(async () => {
+      const carro = this.cartService.carrito();
+      if (carro.length === 0) {
+        this.productosCarrito.set([]);
+        return;
+      }
+
+      const productosCompletos = await Promise.all(
+        carro.map(async (item: Cart) => {
+          const producto = await this.productosService.getById(item.idProducto);
+          return { 
+            producto: producto! as Producto, // Usamos '!' porque confiamos que el producto existe
+            cantidad: item.cantidad, 
+            notas: item.notas 
+          };
+        })
+      );
+      this.productosCarrito.set(productosCompletos);
+    });
+  }
 
   ngOnInit(): void {
-    this.headerService.titulo.set("Carrito");
-    this.buscarInformacionProductos().then(() =>{
-      this.calcularInformacion();
-    })
+    this.headerService.titulo.set('Mi Carrito');
+    this.headerService.extendido.set(false);
   }
 
-  async buscarInformacionProductos(){
-    for (let i = 0; i < this.cartService.carrito.length; i++) {
-      const itemCarrito = this.cartService.carrito[i];
-      const res = await this.productosService.getById(itemCarrito.idProducto)
-      if(res) this.productosCarrito.set([...this.productosCarrito(),res]);
+  cambiarCantidadProducto(item: {idProducto: number, cantidad: number}) {
+    this.cartService.cambiarCantidadProducto(item.idProducto, item.cantidad);
+  }
+
+  eliminarProducto(id: number) {
+    this.cartService.eliminarProducto(id);
+  }
+
+  enviarMensaje() {
+    const perfil = this.perfilService.perfil();
+    if (!perfil) return;
+
+    let mensaje = "Hola, me gustaría hacer el siguiente pedido:\n\n";
+    this.productosCarrito().forEach(item => {
+      mensaje += `- ${item.cantidad}x ${item.producto.nombre}\n`;
+    });
+    mensaje += `\nTotal: $${this.total()}\n\n`;
+    mensaje += "Datos de envío:\n";
+    mensaje += `Nombre: ${perfil.nombre}\n`;
+    mensaje += `Dirección: ${perfil.direccion}\n`;
+    if (perfil.detalleEntrega) {
+      mensaje += `Detalles: ${perfil.detalleEntrega}\n`;
     }
+    mensaje += `Teléfono: ${perfil.telefono}`;
+
+    const url = `https://wa.me/5491112345678?text=${encodeURIComponent(mensaje)}`;
+    window.open(url, '_blank');
+    this.dialog.nativeElement.showModal();
   }
 
-  eliminarProducto(idProducto:number){
-    this.cartService.eliminarProducto(idProducto);
-  }
-
-  calcularInformacion (){
-    this.subtotal = 0;
-    for (let i = 0; i < this.cartService.carrito.length; i++) {
-      this.subtotal += this.productosCarrito()[i].precio * this.cartService.carrito[i].cantidad;
-    }
-    this.total = this.subtotal + this.configService.configuracion().costoEnvio;
-  }
-
-  cambiarCantidadProducto(id:number,cantidad:number){
-    this.cartService.cambiarCantidadProducto(id,cantidad)
-    this.calcularInformacion();
-  }
-
-  async enviarMensaje(){
-    let pedido = ""
-    for (let i = 0; i < this.cartService.carrito.length; i++) {
-      const producto = await this.productosService.getById(this.cartService.carrito[i].idProducto);
-      pedido += `* ${this.cartService.carrito[i].cantidad} X ${producto?.nombre}
-`
-    }
-    const mensaje = `
-Hola! Soy ${this.perfilService.perfil()?.nombre}, y te quiero hacer el siguiente pedido:
-${pedido}
-Si te querés comunicar conmigo hacelo al Nº del que te hablo o al ${this.perfilService.perfil()?.telefono}.
-La dirección de envío es: ${this.perfilService.perfil()?.direccion} - ${this.perfilService.perfil()?.detalleEntrega}.
-Muchas gracias
-`
-    const link = `https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURI(mensaje)}`
-    window.open(link,"_blank");
-    this.dialog.nativeElement.showModal()
-  }
-
-  finalizarPedido(){
+  finalizarPedido() {
     this.cartService.vaciar();
     this.dialog.nativeElement.close();
-    this.router.navigate(['/']);
   }
 
-  editarPedido(){
+  editarPedido() {
     this.dialog.nativeElement.close();
   }
-
 }
-

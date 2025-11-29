@@ -1,10 +1,9 @@
-$altura : 30px;
-
 #container{
+  --altura: 30px;
   display: flex;
   justify-content: space-between;
   width: 80px;
-  height: $altura;
+  height: var(--altura);
   background-color: var(--color-principal-claro);
   border-radius: var(--border-radius-chico);
   overflow: hidden;
@@ -19,5 +18,5 @@ button{
 }
 
 span{
-  line-height: $altura;
+  line-height: var(--altura);
 }
