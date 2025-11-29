@@ -1,6 +1,7 @@
 import { Component, OnInit, computed, inject, signal, ElementRef, ViewChild, effect } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { CartService } from '../../core/services/cart.service';
 import { ProductosService } from '../../core/services/productos.service';
@@ -15,7 +16,7 @@ import { ContadorCantidadComponent } from '../../components/contador-cantidad/co
 @Component({
   selector: 'app-carrito',
   standalone: true,
-  imports: [CommonModule, RouterModule, CurrencyPipe, ContadorCantidadComponent],
+  imports: [CommonModule, RouterModule, CurrencyPipe, ContadorCantidadComponent, MatSnackBarModule],
   templateUrl: './carrito.component.html',
   styleUrl: './carrito.component.scss'
 })
@@ -23,11 +24,14 @@ export class CarritoComponent implements OnInit {
 
   @ViewChild('dialog') dialog!: ElementRef<HTMLDialogElement>;
 
+  // Servicios inyectados
   cartService = inject(CartService);
   productosService = inject(ProductosService);
   perfilService = inject(PerfilService);
   configService = inject(ConfigService);
   headerService = inject(HeaderService);
+  router = inject(Router);
+  snackBar = inject(MatSnackBar);
 
   productosCarrito = signal<{ producto: Producto, cantidad: number, notas: string }[]>([]);
 
@@ -51,7 +55,7 @@ export class CarritoComponent implements OnInit {
         carro.map(async (item: Cart) => {
           const producto = await this.productosService.getById(item.idProducto);
           return { 
-            producto: producto! as Producto, // Usamos '!' porque confiamos que el producto existe
+            producto: producto! as Producto,
             cantidad: item.cantidad, 
             notas: item.notas 
           };
@@ -76,12 +80,20 @@ export class CarritoComponent implements OnInit {
 
   enviarMensaje() {
     const perfil = this.perfilService.perfil();
-    if (!perfil) return;
+    // Si el perfil no está completo, notifica y redirige al usuario
+    if (!perfil || !perfil.nombre || !perfil.direccion || !perfil.telefono) {
+      this.snackBar.open('Por favor, completa tu perfil para poder realizar el pedido.', 'Cerrar', { duration: 3000 });
+      this.router.navigate(['/perfil']);
+      return;
+    }
 
     let mensaje = "Hola, me gustaría hacer el siguiente pedido:\n\n";
     this.productosCarrito().forEach(item => {
       mensaje += `- ${item.cantidad}x ${item.producto.nombre}\n`;
+      if(item.notas) mensaje += `  (Notas: ${item.notas})\n`;
     });
+    mensaje += `\nSubtotal: $${this.subtotal()}`;
+    mensaje += `\nCosto de envío: $${this.configService.configuracion().costoEnvio}`;
     mensaje += `\nTotal: $${this.total()}\n\n`;
     mensaje += "Datos de envío:\n";
     mensaje += `Nombre: ${perfil.nombre}\n`;
@@ -91,7 +103,8 @@ export class CarritoComponent implements OnInit {
     }
     mensaje += `Teléfono: ${perfil.telefono}`;
 
-    const url = `https://wa.me/5491112345678?text=${encodeURIComponent(mensaje)}`;
+    const numeroAdmin = this.configService.configuracion().numeroAdmin;
+    const url = `https://wa.me/${numeroAdmin}?text=${encodeURIComponent(mensaje)}`;
     window.open(url, '_blank');
     this.dialog.nativeElement.showModal();
   }

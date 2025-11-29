@@ -10,11 +10,12 @@ export class ConfigService {
 
   configuracion:WritableSignal<Config> = signal({
     costoEnvio: 0,
-    diasVencimientoCarrito: 100
+    diasVencimientoCarrito: 100,
+    numeroAdmin: ''
   })
 
   loadConfig(): Promise<void> {
-    return fetch("assets/data/configuracion.json") // RUTA CORREGIDA
+    return fetch("assets/data/config.json") // RUTA CORREGIDA
       .then(res => {
         if (!res.ok) {
           // Si la respuesta no es OK (ej. 404 Not Found), lanzamos un error
